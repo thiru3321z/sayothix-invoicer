@@ -1651,7 +1651,7 @@ function rSet(){
     </div></div>
 
     <div class="card" style="grid-column:1/-1;border-color:rgba(62,207,142,.3)">
-        <div class="ch"><div class="ct">☁️ Supabase Cloud Sync</div><div class="cst" id="sb-status" style="font-size:12px;color:${s.sbUrl&&s.sbKey?'var(--green)':\'var(--text3)\'}">${s.sbUrl&&s.sbKey?'✓ Configured':'Not configured'}</div></div>
+        <div class="ch"><div class="ct">☁️ Supabase Cloud Sync</div><div class="cst" id="sb-status" style="font-size:12px;color:var(--text3)">${s.sbUrl&&s.sbKey?'✓ Configured':'Not configured'}</div></div>
         <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6">Connect to Supabase so your data is stored in the cloud — safe from browser cache clears and accessible from any device.</div>
         <div class="fr2" style="margin-bottom:12px">
           <div class="fg" style="margin-bottom:0"><label class="fl">Project URL</label><input class="fi" id="s-sbUrl" placeholder="https://xxxx.supabase.co" value="${xe(s.sbUrl||'')}"></div>

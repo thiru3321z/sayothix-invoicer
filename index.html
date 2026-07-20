@@ -996,9 +996,9 @@ function calcPreview(){
 function pCS(selId){
   const s=document.getElementById('mc');
   s.innerHTML=`<option value="">— Select customer —</option>`;
-  D.customers.forEach(c=>{
-    const code=c.code?` (#${String(c.code).padStart(2,'0')})`:'';
-    s.innerHTML+=`<option value="${c.id}" ${c.id===selId?'selected':''}>${xe(c.name)}${code}</option>`;
+  [...D.customers].sort((a,b)=>Number(a.code||999)-Number(b.code||999)).forEach(c=>{
+    const code=String(c.code||'').padStart(2,'0');
+    s.innerHTML+=`<option value="${c.id}" ${c.id===selId?'selected':''}>#${code}  ${xe(c.name)}</option>`;
   });
   s.onchange=()=>updInvNum();
 }
@@ -1037,7 +1037,7 @@ function saveInv(){
 // ══════════════════════════════════════════════
 function rCT(){
   const q=(document.getElementById('csrch')||{}).value||'';
-  let custs=D.customers.slice();
+  let custs=D.customers.slice().sort((a,b)=>Number(a.code||999)-Number(b.code||999));
   if(q){const ql=q.toLowerCase();custs=custs.filter(c=>(c.name||'').toLowerCase().includes(ql)||(c.email||'').toLowerCase().includes(ql));}
   if(!custs.length){
     document.getElementById('ct').innerHTML=`<div class="empty"><div class="ei">👥</div><p>No customers yet. Add your first client!</p><button class="btn btn-p btn-sm" onclick="openNewCust()">+ Add Customer</button></div>`;
@@ -1833,7 +1833,7 @@ function openNewQuot(){
   document.getElementById('q-total-preview').textContent='RM 0.00';
   const sel=document.getElementById('qc');
   sel.innerHTML='<option value="">— Select Customer —</option>'+
-    D.customers.map(c=>`<option value="${c.id}">${xe(c.name)}${c.attn?' ('+xe(c.attn)+')':''}</option>`).join('');
+    D.customers.slice().sort((a,b)=>Number(a.code||999)-Number(b.code||999)).map(c=>`<option value="${c.id}">#${String(c.code||"").padStart(2,"0")}  ${xe(c.name)}</option>`).join('');
   openM('quot-m');
 }
 
@@ -1957,7 +1957,7 @@ function editQuot(id){
   document.getElementById('qmt').textContent='Edit Quotation';
   const sel=document.getElementById('qc');
   sel.innerHTML='<option value="">— Select Customer —</option>'+
-    D.customers.map(c=>`<option value="${c.id}"${c.id===q.cid?' selected':''}>${xe(c.name)}${c.attn?' ('+xe(c.attn)+')':''}</option>`).join('');
+    D.customers.slice().sort((a,b)=>Number(a.code||999)-Number(b.code||999)).map(c=>`<option value="${c.id}"${c.id===q.cid?' selected':''}>#${String(c.code||"").padStart(2,"0")}  ${xe(c.name)}</option>`).join('');
   document.getElementById('qd').value=q.date||'';
   document.getElementById('qn').value=q.number||'';
   const setv=(id,val)=>{const el=document.getElementById(id);if(el)el.value=val||'';};

@@ -1556,8 +1556,8 @@ function sEmail(id){
   html2pdf().set({
     margin:6,
     filename:`Invoice-${inv.number}.pdf`,
-    image:{type:'jpeg',quality:.75},
-    html2canvas:{scale:1.5,useCORS:true},
+    image:{type:'jpeg',quality:.5},
+    html2canvas:{scale:1,useCORS:true},
     jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
   }).from(tmp.firstChild).outputPdf('datauristring').then(pdfDataUri=>{
     document.body.removeChild(tmp);
@@ -1572,12 +1572,6 @@ function sEmail(id){
       invoice_date:fDL(inv.date),
       due_date:fDL(inv.dueDate),
       billing_month:month,
-      items_list:lines.join('\n'),
-      total_amount:fR(total),
-      bank_name:s.bankName,
-      bank_acc:s.bankAcc,
-      bank_holder:s.bankHolder,
-      business_name:s.businessName,
       pdf_attachment:pdfDataUri,
     };
 
@@ -2125,7 +2119,7 @@ function doQEmail(){
   tmp.style.cssText='position:fixed;left:-9999px;top:0;width:794px;background:#fff';
   tmp.innerHTML=bQD(q);
   document.body.appendChild(tmp);
-  html2pdf().set({margin:[3,5,3,5],filename:`Quotation-${q.number}.pdf`,image:{type:'jpeg',quality:.75},html2canvas:{scale:1.5,useCORS:true},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},pagebreak:{mode:'avoid-all'}})
+  html2pdf().set({margin:[3,5,3,5],filename:`Quotation-${q.number}.pdf`,image:{type:'jpeg',quality:.5},html2canvas:{scale:1,useCORS:true},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}})
     .from(tmp.firstChild).outputPdf('datauristring').then(pdfUri=>{
       document.body.removeChild(tmp);
       const params={

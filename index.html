@@ -1559,7 +1559,8 @@ function sEmail(id){
     image:{type:'jpeg',quality:.3},
     html2canvas:{scale:1,useCORS:true,logging:false},
     jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
-  }).from(tmp.firstChild).outputPdf('datauristring').then(pdfDataUri=>{
+  }).from(tmp.firstChild).outputPdf('datauristring').then(rawUri=>{
+    const pdfDataUri=rawUri.split(',')[1];
     document.body.removeChild(tmp);
 
     const params={
@@ -2126,7 +2127,8 @@ function doQEmail(){
   tmp.innerHTML=bQD(q);
   document.body.appendChild(tmp);
   html2pdf().set({margin:[3,5,3,5],filename:`Quotation-${q.number}.pdf`,image:{type:'jpeg',quality:.3},html2canvas:{scale:1,useCORS:true,logging:false},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}})
-    .from(tmp.firstChild).outputPdf('datauristring').then(pdfUri=>{
+    .from(tmp.firstChild).outputPdf('datauristring').then(rawUri2=>{
+      const pdfUri=rawUri2.split(',')[1];
       document.body.removeChild(tmp);
       const params={
         to_name:cl.attn||cl.name,to_email:cl.email,cc_email:cl.cc||s.emailCc||'',bcc_email:cl.bcc||s.emailBcc||'',from_name:s.businessName,

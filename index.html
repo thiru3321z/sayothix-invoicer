@@ -1573,18 +1573,30 @@ function sEmail(id){
     };
 
     toast('Sending email…','i');
-    emailjs.send(s.ejsSvc,s.ejsTpl,params)
-      .then(()=>{
-        inv.sentAt=new Date().toISOString();
-        inv.sentVia=Array.from(new Set([...(inv.sentVia||[]),'Email']));
-        addH('email',`Invoice ${inv.number} sent via Email`,cl.name||'');
-        save();rSend();rIT();rDash();
-        toast('✓ Email sent with PDF attachment!','s');
-      }).catch(err=>{
-        console.error('EmailJS error:', err);
-        const msg = err?.text || err?.message || err?.error || JSON.stringify(err);
-        toast('Email error: '+msg,'e');
-      });
+    fetch('/api/send-email',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        to_email:params.to_email,
+        to_name:params.to_name,
+        from_name:params.from_name,
+        invoice_number:params.invoice_number,
+        cc_email:params.cc_email,
+        bcc_email:params.bcc_email,
+        pdf_base64:params.pdf_attachment.split(',')[1],
+        filename:`Invoice-${inv.number}.pdf`
+      })
+    }).then(r=>r.json()).then(data=>{
+      if(data.error) throw new Error(data.error);
+      inv.sentAt=new Date().toISOString();
+      inv.sentVia=Array.from(new Set([...(inv.sentVia||[]),'Email']));
+      addH('email',`Invoice ${inv.number} sent via Email`,cl.name||'');
+      save();rSend();rIT();rDash();
+      toast('✓ Email sent with PDF attachment!','s');
+    }).catch(err=>{
+      console.error('Email error:',err);
+      toast('Email error: '+err.message,'e');
+    });
   }).catch(err=>{
     document.body.removeChild(tmp);
     toast('PDF generation failed: '+err,'e');
@@ -2130,16 +2142,28 @@ function doQEmail(){
         pdf_attachment:pdfUri,
       };
       toast('Sending email…','i');
-      emailjs.send(s.ejsSvc,s.ejsTpl,params)
-        .then(()=>{
-          q.status='sent';q.sentVia=Array.from(new Set([...(q.sentVia||[]),'Email']));
-          save();rQT();closeM('qprev-m');
-          addH('email',`Quotation ${q.number} sent via Email`,cl.name||'');
-          toast('✓ Email sent with PDF!','s');
-        }).catch(err=>{
-          const msg=err?.text||err?.message||err?.error||JSON.stringify(err);
-          toast('Email error: '+msg,'e');
-        });
+      fetch('/api/send-email',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          to_email:params.to_email,
+          to_name:params.to_name,
+          from_name:params.from_name,
+          invoice_number:params.invoice_number,
+          cc_email:params.cc_email,
+          bcc_email:params.bcc_email,
+          pdf_base64:pdfUri.split(',')[1],
+          filename:`Quotation-${q.number}.pdf`
+        })
+      }).then(r=>r.json()).then(data=>{
+        if(data.error) throw new Error(data.error);
+        q.status='sent';q.sentVia=Array.from(new Set([...(q.sentVia||[]),'Email']));
+        save();rQT();closeM('qprev-m');
+        addH('email',`Quotation ${q.number} sent via Email`,cl.name||'');
+        toast('✓ Email sent with PDF!','s');
+      }).catch(err=>{
+        toast('Email error: '+err.message,'e');
+      });
     });
 }
 

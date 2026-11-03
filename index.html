@@ -1537,7 +1537,6 @@ function sEmail(id){
   const cl=gC(inv.cid);
   const s=D.settings;
   if(!cl.email){toast('No email for this customer. Add one in Customers.','e');return}
-  if(!s.ejsKey){toast('Configure EmailJS in Settings first','e');return}
   const total=invTot(inv);
   const month=inv.billingMonth||'';
   let lines=[];

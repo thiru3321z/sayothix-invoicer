@@ -46,7 +46,7 @@ Operations Manager<br>
   const payload = {
     from: 'Sayothix PLT <hello@sayothix.com>',
     to: [to_email],
-    subject: `Invoice ${invoice_number} from ${from_name || 'Sayothix PLT'}`,
+    subject: `SAYOTHIX WEB DESIGN | Invoice ${invoice_number} | ${billing_month} |`,
     html,
     attachments: [{
       filename: filename || `Invoice-${invoice_number}.pdf`,

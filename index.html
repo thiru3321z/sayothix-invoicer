@@ -1547,7 +1547,7 @@ function sEmail(id){
 
   toast('Generating PDF…','i');
 
-  // Render invoice into a hidden off-screen element for PDF generation
+  // Use full invoice HTML for PDF but pass only essential variables
   const tmp=document.createElement('div');
   tmp.style.cssText='position:fixed;left:-9999px;top:0;width:794px;background:#fff';
   tmp.innerHTML=bID(inv);
@@ -1556,22 +1556,19 @@ function sEmail(id){
   html2pdf().set({
     margin:6,
     filename:`Invoice-${inv.number}.pdf`,
-    image:{type:'jpeg',quality:.5},
-    html2canvas:{scale:1,useCORS:true},
+    image:{type:'jpeg',quality:.75},
+    html2canvas:{scale:1.5,useCORS:true},
     jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
   }).from(tmp.firstChild).outputPdf('datauristring').then(pdfDataUri=>{
     document.body.removeChild(tmp);
 
     const params={
-      to_name:cl.attn||cl.name,
+      to_name:(cl.attn||cl.name||'').substring(0,50),
       to_email:cl.email,
-      cc_email:cl.cc||s.emailCc||'',
-      bcc_email:cl.bcc||s.emailBcc||'',
-      from_name:s.businessName,
+      cc_email:(cl.cc||s.emailCc||'').substring(0,100),
+      bcc_email:(cl.bcc||s.emailBcc||'').substring(0,100),
+      from_name:(s.businessName||'').substring(0,50),
       invoice_number:inv.number,
-      invoice_date:fDL(inv.date),
-      due_date:fDL(inv.dueDate),
-      billing_month:month,
       pdf_attachment:pdfDataUri,
     };
 

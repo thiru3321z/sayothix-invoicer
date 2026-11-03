@@ -6,7 +6,7 @@ export default async function handler(req, res) {
   if (!to_email || !pdf_base64) return res.status(400).json({ error: 'Missing required fields' });
 
   const payload = {
-    from: 'Sayothix PLT <hello@sayothix.com>',
+    from: 'Sayothix PLT <onboarding@resend.dev>',
     to: [to_email],
     subject: `Invoice ${invoice_number} from ${from_name || 'Sayothix PLT'}`,
     html: `<p>Dear ${to_name || 'Sir/Madam'},</p>
